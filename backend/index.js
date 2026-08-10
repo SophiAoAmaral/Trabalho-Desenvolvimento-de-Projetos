@@ -1,0 +1,122 @@
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt'
+import jwt from "jsonwebtoken";
+
+console.log(process.env.MONGO_URI);
+console.log(process.env.PORT);
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+const PORT = process.env.PORT || 3003;
+
+const usuarioSchema = new mongoose.Schema({
+    email:{type:String, required:true, unique: true},
+    senha:{type:String, required:true},
+},{timestamps: true});
+
+const Usuario = mongoose.model("Usuario", usuarioSchema);
+
+mongoose.connect(process.env.MONGO_URI)
+ .then(() => {
+    console.log('Mongo conectado');
+    app.listen(PORT, () => console.log(`Servidor na ${PORT}`));
+  })
+   .catch(err => {
+    console.error('Falha no Mongo:', err.message);
+    process.exit(1);
+  });
+
+
+  const autenticar = async (req, res, next) => {
+    const authorization = req.headers.authorization;
+
+    if (!authorization) {
+      return res.status(401).json({
+        mensagem: "Token não informado",
+      });
+    }
+
+    const token =  authorization.split(" ")[1];
+    try {
+      const dados = jwt.verify(token, process.env.JWT_SECRET);
+      const usuario = await Usuario.findById(dados.id);
+      req.usuario = usuario;
+      next()
+    } catch (err) {
+      return res.status(401).json({
+        mensagem: "Token inválido",
+      });
+    }
+    
+  };
+
+
+app.get('/', async(req, res)=>{
+    res.json('api funcionando')
+})
+
+app.post("/usuarios", async (req, res) => {
+    const { email, senha } = req.body;
+    const senhaHash = await bcrypt.hash(req.body.senha, 10);
+    const usuario = new Usuario({
+    email, 
+    senha: senhaHash
+});
+   await usuario.save();
+
+    return res.status(201).json({
+        mensagem: "Usuário criado com sucesso"
+    });
+});
+
+app.post("/login", async (req, res) => {
+
+    const { email, senha } = req.body;
+
+    const usuario = await Usuario.findOne({
+        email
+    });
+
+    if (!usuario) {
+        return res.status(401).json({
+            mensagem: "Email ou senha inválidos"
+        });
+    }
+
+    const senhaCorreta = await bcrypt.compare(
+        senha,
+        usuario.senha
+    );
+
+    if (!senhaCorreta) {
+        return res.status(401).json({
+            mensagem: "Email ou senha inválidos"
+        });
+    }
+
+    const token = jwt.sign(
+        {
+            id: usuario._id
+        },
+        process.env.JWT_SECRET
+    );
+
+    return res.status(200).json({
+        token
+    });
+
+    });
+
+app.get("/perfil", autenticar, async (req, res) => {
+    const perfil = {
+    id: req.usuario._id,
+    email: req.usuario.email
+};
+
+return res.status(200).json(perfil);
+});
+
