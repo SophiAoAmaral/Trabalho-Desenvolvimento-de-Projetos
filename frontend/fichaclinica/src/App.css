@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@layer components {
+  .container {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }}
