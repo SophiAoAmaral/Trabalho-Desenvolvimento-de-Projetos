@@ -16,11 +16,14 @@ const PORT = process.env.PORT || 3003;
 const usuarioSchema = new mongoose.Schema({
     email:{type:String, required:true, unique: true},
     senha:{type:String, required:true},
-    nome:{type:String, required:true},
-    sobrenome:{type:String, required:true},
+    nome:{type:String},
+    sobrenome:{type:String},
     sexo: {type: String, enum: ["Masculino", "Feminino", "Outro"]},
     contatoEmergencia:{type:String},
-    tipoSanguineo:{type:String},
+    nomeContatoEmergencia:{type:String},
+    tipoSanguineo: {
+    type: String,
+    enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]},
     alergias:{type:String},
     medicamentosContinuos:{type:String},
     doencas:{type:String},
@@ -122,11 +125,24 @@ app.post("/login", async (req, res) => {
     });
 
 app.get("/perfil", autenticar, async (req, res) => {
-    const perfil = {
-    id: req.usuario._id,
-    email: req.usuario.email
-};
-
-return res.status(200).json(perfil);
+    return res.status(200).json(req.usuario);
 });
 
+app.put("/perfil", autenticar, async (req, res) => {
+    try {
+        const ficha = req.body;
+
+        Object.assign(req.usuario, ficha);
+
+        await req.usuario.save();
+
+        return res.status(200).json({
+            mensagem: "Perfil atualizado com sucesso"
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            mensagem: "Erro ao atualizar o perfil"
+        });
+    }
+});
