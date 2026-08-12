@@ -73,17 +73,37 @@ app.get('/', async(req, res)=>{
 })
 
 app.post("/usuarios", async (req, res) => {
-    const { email, senha } = req.body;
-    const senhaHash = await bcrypt.hash(req.body.senha, 10);
-    const usuario = new Usuario({
-    email, 
-    senha: senhaHash
-});
-   await usuario.save();
+    try {
+        const { email, senha } = req.body;
 
-    return res.status(201).json({
-        mensagem: "Usuário criado com sucesso"
-    });
+        const usuarioExistente = await Usuario.findOne({ email });
+
+        if (usuarioExistente) {
+            return res.status(409).json({
+                mensagem: "Este e-mail já está cadastrado."
+            });
+        }
+
+        const senhaHash = await bcrypt.hash(senha, 10);
+
+        const usuario = new Usuario({
+            email,
+            senha: senhaHash
+        });
+
+        await usuario.save();
+
+        return res.status(201).json({
+            mensagem: "Usuário criado com sucesso"
+        });
+
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            mensagem: "Erro interno do servidor."
+        });
+    }
 });
 
 app.post("/login", async (req, res) => {

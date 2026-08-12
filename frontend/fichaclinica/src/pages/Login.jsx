@@ -14,8 +14,9 @@ export const Login = () => {
     senha: ""
 });
 
-    const[error, setError]= useState('')
-        function handleChange(e) {
+    const[error, setError]= useState('');
+
+    function handleChange(e) {
     const name = e.target.name;
     const value = e.target.value;
 
@@ -41,7 +42,10 @@ export const Login = () => {
           senha: "",
         });
       } catch (err) {
-        console.log(err)
+        setError(err.response.data.mensagem)
+        setTimeout(() => {
+        setError('')
+        }, 5000);
       }
     }
     
@@ -95,17 +99,21 @@ export const Login = () => {
                         :
                         <form className='flex flex-col gap-2 ' onSubmit={handleSubmit}> 
                         <div className='grid grid-cols-2 mt-3'>
-                            <label htmlFor="nome">Nome
-                            <input type="text" name="nome" value={usuario.nome} onChange={handleChange} className='py-3  px-7 rounded-2xl border border-black/30'/>
-                            </label>
-                            <label htmlFor="sobrenome">Sobrenome
-                            <input type="text" name="sobrenome" value={usuario.sobrenome} onChange={handleChange} className='py-3 px-10 rounded-2xl border border-black/30'/>
-                            </label>
+                            <div className='flex flex-col mr-4'>
+                                <label htmlFor="nome">Nome</label>
+                                <input type="text" name="nome" value={usuario.nome} onChange={handleChange} className='py-3  px-3 rounded-2xl border border-black/30'/>
+                            </div>
+                            <div className='flex flex-col ml-4'>
+                                <label htmlFor="sobrenome">Sobrenome</label>
+                                <input type="text" name="sobrenome" value={usuario.sobrenome} onChange={handleChange} className='py-3 px-3 rounded-2xl border border-black/30'/>
+                                
+                            </div>
                         </div>
                         <label htmlFor="">Email corporativo</label>
                         <input type="email" placeholder='' value={usuario.email} name='email' onChange={handleChange} className='py-3 px-5 rounded-2xl border border-black/30'/>
                         <label htmlFor="">Senha</label>
                         <input type="password" name="senha" value={usuario.senha} onChange={handleChange} className='py-3 px-5 rounded-2xl border border-black/30'/>
+                        <div>{error && <p className='text-red-600'>{error}</p>}</div>
                         <button type='submit' className='mt-3 py-3 px-40 hover:bg-[#282e71] bg-[#454C92] text-white rounded-3xl self-center text-xl cursor-pointer'>{login ? 'Entrar' : 'Cadastrar'}</button>
                         </form> 
                         }
