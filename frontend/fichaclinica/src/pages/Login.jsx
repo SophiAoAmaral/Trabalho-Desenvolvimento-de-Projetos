@@ -69,11 +69,11 @@ export const Login = () => {
     
 
   return (
-    <section className='bg-[#F4F2EE] h-[83vh]'>
-        <section className='container mt-20'>
-            <section className='grid grid-cols-2 gap-10 pt-30 justify-center items-center'>
+    <section className='bg-[#F4F2EE] h-[87vh]'>
+        <section className='container '>
+            <section className='grid grid-cols-2 gap-10 pt-20 justify-center items-center'>
                 <div>
-                    <h1 className='text-7xl'>Suas informações clínicas, disponíveis quando importa.</h1>
+                    <h1 className='text-7xl pb-3'>Suas informações clínicas, disponíveis quando importa.</h1>
                     <p>Cadastre tipo sanguíneo, alergias, medicamentos e contato de emergência. O sistema gera um código QR para colar no seu crachá protegido por uma senha impressa ao lado dele.</p>
                 </div>
 

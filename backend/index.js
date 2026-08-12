@@ -16,6 +16,16 @@ const PORT = process.env.PORT || 3003;
 const usuarioSchema = new mongoose.Schema({
     email:{type:String, required:true, unique: true},
     senha:{type:String, required:true},
+    nome:{type:String, required:true},
+    sobrenome:{type:String, required:true},
+    sexo: {type: String, enum: ["Masculino", "Feminino", "Outro"]},
+    contatoEmergencia:{type:String},
+    tipoSanguineo:{type:String},
+    alergias:{type:String},
+    medicamentosContinuos:{type:String},
+    doencas:{type:String},
+    cirurgiasRealizadas:{type:String},
+    senhaPublica:{type:String}
 },{timestamps: true});
 
 const Usuario = mongoose.model("Usuario", usuarioSchema);
