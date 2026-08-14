@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router';
 
 export const Ficha = () => {
     const navigate = useNavigate();
+    const [mensagem, setMensagem] = useState("");
     const [ficha, setFicha] = useState({
     nome: "",
     sobrenome: "",
@@ -43,10 +44,14 @@ async function handleSubmit(e) {
                 }
             }
         );
-
+        setMensagem("Ficha atualizada com sucesso!");
+        setTimeout(() => {
+        setMensagem('')
+        }, 5000);
         console.log(ficha);
         
     } catch (err) {
+      setMensagem("Erro ao atualizar a ficha.");
      console.log(err)
 
     }
@@ -77,9 +82,12 @@ useEffect(() => {
         <div className="grid grid-cols-[1fr_350px] gap-10 ">
           <section className="bg-white p-10 my-15 rounded-2xl ">
             <form onSubmit={handleSubmit}>
-              <h1 className="text-3xl font-bold text-[#282e71] mb-5">
-                Sua ficha clínica
-              </h1>
+              <div className='flex justify-between'>
+                <h1 className="text-3xl font-bold text-[#282e71] mb-5">
+                  Sua ficha clínica
+                </h1>
+                <span className='text-green-500'>{mensagem}</span>
+              </div>
               <div className="grid grid-cols-2 gap-5 border-b border-black/30 pb-10">
                 <div className="flex flex-col gap-2">
                   <label htmlFor="nome">Nome</label>
@@ -232,10 +240,20 @@ useEffect(() => {
               </div>
 
               <div className="flex gap-5 mt-6">
-                <button type="submit" className='bg-[#282e71] text-white py-3 px-6 rounded-2xl '>
+                <button type="submit" className='bg-[#282e71] cursor-pointer hover:bg-[#090e42] text-white py-3 px-6 rounded-2xl '>
                   {primeiroCadastro ? "Salvar ficha" : "Atualizar ficha"}
                 </button>
+                <button type='button' type="button"
+    onClick={() => {
+        console.log("Enviando ficha:", ficha);
+
+        navigate("/qrcode", {
+            state: { ficha }
+        });
+    }} className='border cursor-pointer py-3 px-6 rounded-2xl hover:bg-[#282e71] hover:text-white'>Ver QR Code</button>
               </div>
+
+              
             </form>
           </section>
           <div className="bg-white h-75 mt-15 rounded-2xl p-5">
@@ -249,7 +267,7 @@ useEffect(() => {
                 </div>
                 <p className='mt-2'>{ficha.nomeContatoEmergencia} {ficha.contatoEmergencia}</p>
             </div>
-            <button onClick={()=> navigate("/paginapublica", { state:{ficha:ficha}})} className='bg-[#282e71] py-2 px-4 text-white rounded-2xl block mt-4 text-center'>Abrir ficha publica</button>
+            <button onClick={()=> navigate(`/paginapublica/${ficha.codigoPublico}`, { state:{ficha:ficha}})} className='bg-[#282e71] py-2 px-4 text-white rounded-2xl block mt-4 text-center cursor-pointer hover:bg-[#090e42]'>Abrir ficha publica</button>
           </div>
           
         </div>

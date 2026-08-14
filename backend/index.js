@@ -4,6 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
 
 console.log(process.env.MONGO_URI);
 console.log(process.env.PORT);
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 3003;
 const usuarioSchema = new mongoose.Schema({
     email:{type:String, required:true, unique: true},
     senha:{type:String, required:true},
+    codigoPublico: {type: String,unique: true},
     nome:{type:String},
     sobrenome:{type:String},
     sexo: {type: String, enum: ["Masculino", "Feminino", "Outro"]},
@@ -88,7 +90,8 @@ app.post("/usuarios", async (req, res) => {
 
         const usuario = new Usuario({
             email,
-            senha: senhaHash
+            senha: senhaHash,
+            codigoPublico: uuidv4()
         });
 
         await usuario.save();
@@ -145,7 +148,7 @@ app.post("/login", async (req, res) => {
     });
 
 app.get("/perfil", autenticar, async (req, res) => {
-    return res.status(200).json(req.usuario);
+    return res.status(200).json(req.usuario, {mensagem:'Perfil atualizado com sucesso'});
 });
 
 app.put("/perfil", autenticar, async (req, res) => {
@@ -163,6 +166,32 @@ app.put("/perfil", autenticar, async (req, res) => {
     } catch (err) {
         return res.status(500).json({
             mensagem: "Erro ao atualizar o perfil"
+        });
+    }
+});
+
+
+app.get("/publico/:codigo", async (req, res) => {
+    try {
+        const { codigo } = req.params;
+
+        const usuario = await Usuario.findOne({
+            codigoPublico: codigo
+        });
+
+        if (!usuario) {
+            return res.status(404).json({
+                mensagem: "Ficha não encontrada."
+            });
+        }
+
+        return res.status(200).json(usuario);
+
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            mensagem: "Erro interno do servidor."
         });
     }
 });
