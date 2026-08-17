@@ -195,3 +195,18 @@ app.get("/publico/:codigo", async (req, res) => {
         });
     }
 });
+
+app.delete("/perfil", autenticar, async (req, res) => {
+    try {
+        await Usuario.findByIdAndDelete(req.usuario._id);
+
+        return res.status(200).json({
+            mensagem: "Perfil excluído com sucesso."
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            mensagem: "Erro ao excluir perfil."
+        });
+    }
+});
