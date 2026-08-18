@@ -40,7 +40,7 @@ if (!ficha) {
               <h2 className='text-4xl font-bold mb-2'>{ficha.nome}</h2>
               <div className='**:block flex gap-4 **:border **:px-2 **:rounded-2xl'>
                 <span>{ficha.sexo}</span>
-                <span className='bg-[#282e71] text'>TIPO {ficha.tipoSanguineo}</span>
+                <span className='bg-[#282e71] text-white'>TIPO {ficha.tipoSanguineo}</span>
               </div>
             </div>
             <article className='bg-black/7 mt-2 mb-3 px-5 py-2 flex justify-between items-center' >

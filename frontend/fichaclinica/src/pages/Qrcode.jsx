@@ -56,7 +56,12 @@ async function excluirConta() {
         );
 
         localStorage.removeItem("token");
-        navigate("/");
+        navigate("/", {
+    replace: true,
+    state: {
+        mensagem: "Conta excluída com sucesso."
+    }
+});
 
     } catch (err) {
         console.log(err);

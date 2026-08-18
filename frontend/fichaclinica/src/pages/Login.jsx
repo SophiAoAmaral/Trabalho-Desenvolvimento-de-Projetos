@@ -1,12 +1,15 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router'
-
+import { useLocation } from "react-router";
 
 export const Login = () => {
     const navigate = useNavigate();
     const [login, setLogin] =useState(true);
+    const location = useLocation();
+    const [mensagem, setMensagem] = useState(location.state?.mensagem || "");
+
     const [usuario, setUsuario] = useState({
     nome: "",
     sobrenome: "",
@@ -70,11 +73,24 @@ export const Login = () => {
     }, 5000);
       }
 }
-    
+    useEffect(() => {
+    if (mensagem) {
+        const timer = setTimeout(() => {
+            setMensagem("");
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }
+}, [mensagem]);
 
   return (
     <section className='bg-[#F4F2EE] h-[87vh]'>
         <section className='container '>
+            {mensagem && (
+    <div className="mb-4 rounded-lg bg-green-100 border border-green-300 p-3 text-green-700">
+        {mensagem}
+    </div>
+)}
             <section className='grid grid-cols-2 gap-10 pt-20 justify-center items-center'>
                 <div>
                     <h1 className='text-7xl pb-3'>Suas informações clínicas, disponíveis quando importa.</h1>
