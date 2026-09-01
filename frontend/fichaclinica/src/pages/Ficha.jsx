@@ -5,6 +5,10 @@ import { Link, useNavigate } from 'react-router';
 
 export const Ficha = () => {
     const navigate = useNavigate();
+    function sair() {
+    localStorage.removeItem("token");
+    navigate("/");
+}
     const [mensagem, setMensagem] = useState("");
     const [ficha, setFicha] = useState({
     nome: "",
@@ -82,11 +86,12 @@ useEffect(() => {
         <div className="grid grid-cols-[1fr_350px] gap-10 ">
           <section className="bg-white p-10 my-15 rounded-2xl ">
             <form onSubmit={handleSubmit}>
-              <div className='flex justify-between'>
+              <div className="flex justify-between">
                 <h1 className="text-3xl font-bold text-[#282e71] mb-5">
                   Sua ficha clínica
                 </h1>
-                <span className='text-green-500'>{mensagem}</span>
+                <span className="text-green-500">{mensagem}</span>
+                
               </div>
               <div className="grid grid-cols-2 gap-5 border-b border-black/30 pb-10">
                 <div className="flex flex-col gap-2">
@@ -110,7 +115,7 @@ useEffect(() => {
                     className="py-2 px-4 rounded-2xl border border-black/30"
                   />
                 </div>
-            
+
                 <div className="flex flex-col gap-2">
                   <span htmlFor="">Sexo </span>
                   <select
@@ -126,8 +131,6 @@ useEffect(() => {
                     <option value="Outro">Outro</option>
                   </select>
                 </div>
-
-            
 
                 <div className="flex flex-col gap-2">
                   <span className="text">Tipo sanguineo </span>
@@ -149,7 +152,7 @@ useEffect(() => {
                   </select>
                 </div>
 
-                 <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2">
                   <label htmlFor="">Contato Emergencia </label>
                   <input
                     type="text"
@@ -160,7 +163,7 @@ useEffect(() => {
                     className="py-2 px-4 rounded-2xl border border-black/30"
                   />
                 </div>
-                 <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2">
                   <label htmlFor="">Nome contato emergência </label>
                   <input
                     type="text"
@@ -217,58 +220,65 @@ useEffect(() => {
                 </div>
               </div>
 
-              <span className="text-black/30 text-sm uppercase block my-2 font-bold tracking-wider">
-                Senha pública
-              </span>
-              <div className="grid grid-cols-[200px_auto] gap-10">
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="senhaPublica">4 a 6 digitos</label>
-                  <input
-                    name="senhaPublica"
-                    value={ficha.senhaPublica}
-                    onChange={handleChange}
-                    className="border border-black/30 py-2 px-4 rounded-xl"
-                  />
-                </div>
-                <div className="bg-gray-400/30 p-4 rounded-2xl text-sm">
-                  <p className="text-black/50">
-                    Ela é pedida a quem escanear o QR. Será impressa ao lado do
-                    código, nunca dentro dele assim o código sozinho não expõe
-                    seus dados.
-                  </p>
-                </div>
-              </div>
-
               <div className="flex gap-5 mt-6">
-                <button type="submit" className='bg-[#282e71] cursor-pointer hover:bg-[#090e42] text-white py-3 px-6 rounded-2xl '>
+                <button
+                  type="submit"
+                  className="bg-[#282e71] cursor-pointer hover:bg-[#090e42] text-white py-3 px-6 rounded-2xl "
+                >
                   {primeiroCadastro ? "Salvar ficha" : "Atualizar ficha"}
                 </button>
-                <button type='button' type="button"
-    onClick={() => {
-        console.log("Enviando ficha:", ficha);
+                <button
+                  type="button"
+                  onClick={() => {
+                    console.log("Enviando ficha:", ficha);
 
-        navigate("/qrcode", {
-            state: { ficha }
-        });
-    }} className='border cursor-pointer py-3 px-6 rounded-2xl hover:bg-[#282e71] hover:text-white'>Ver QR Code</button>
+                    navigate("/qrcode", {
+                      state: { ficha },
+                    });
+                  }}
+                  className="border cursor-pointer py-3 px-6 rounded-2xl hover:bg-[#282e71] hover:text-white"
+                >
+                  Ver QR Code
+                </button>
               </div>
-
-              
             </form>
           </section>
-          <div className="bg-white h-75 mt-15 rounded-2xl p-5">
-            <h3 className='font-bold text-[#282e71]'>Previa ficha publica</h3>
-            <p className='text-sm mb-2'>É isto que um socorrista vê após escanear o QR Code.</p>
-            <div className='border p-4 rounded-2xl'>
-                <h2 className='text-2xl mb-2'>{ficha.nome} {ficha.sobrenome}</h2>
-                <div className='flex gap-5 **:border **:px-2 **:py-1 **:rounded-2xl'>
-                    <span>{ficha.sexo}</span>
-                    <span>{ficha.tipoSanguineo}</span>
-                </div>
-                <p className='mt-2'>{ficha.nomeContatoEmergencia} {ficha.contatoEmergencia}</p>
+          <div className="bg-white h-60 mt-15 rounded-2xl p-5">
+            <h3 className="font-bold text-[#282e71]">Previa ficha publica</h3>
+            <p className="text-sm mb-2">
+              É isto que um socorrista vê após escanear o QR Code.
+            </p>
+            <div className="border p-4 rounded-2xl">
+              <h2 className="text-2xl mb-2">
+                {ficha.nome} {ficha.sobrenome}
+              </h2>
+              <div className="flex gap-5 **:border **:px-2 **:py-1 **:rounded-2xl">
+                <span>{ficha.sexo}</span>
+                <span>{ficha.tipoSanguineo}</span>
+              </div>
+              <p className="mt-2">
+                {ficha.nomeContatoEmergencia} {ficha.contatoEmergencia}
+              </p>
             </div>
-            <button onClick={()=> navigate(`/paginapublica/${ficha.codigoPublico}`, { state:{ficha:ficha}})} className='bg-[#282e71] py-2 px-4 text-white rounded-2xl block mt-4 text-center cursor-pointer hover:bg-[#090e42]'>Abrir ficha publica</button>
+            <button
+              onClick={() =>
+                navigate(`/paginapublica/${ficha.codigoPublico}`, {
+                  state: { ficha: ficha },
+                })
+              }
+              className="bg-[#282e71] py-2 px-4 text-white rounded-2xl block mt-4 text-center cursor-pointer hover:bg-[#090e42]"
+            >
+              Abrir ficha publica
+            </button>
+            <button
+                  type="button"
+                  onClick={sair}
+                  className="text-white font-semibold bg-red-600 py-2 px-4 rounded-2xl cursor-pointer  mt-10 w-75 hover:bg-red-950"
+                >
+                  Sair
+                </button>
           </div>
+
           
         </div>
       </section>
