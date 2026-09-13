@@ -107,13 +107,13 @@ async function handleSubmit(e) {
 
   return (
     <section className="bg-[#F4F2EE] h-[87vh]">
-      <section className="container pt-30 ">
+      <section className="container  md:pt-30 ">
         {mensagem && (
           <div className="mb-4 rounded-lg bg-green-100 border border-green-300 p-3 text-green-700">
             {mensagem}
           </div>
         )}
-        <section className="grid grid-cols-2 gap-10 pt-20 justify-center items-center">
+        <section className="grid grid-cols-2 gap-10 md:pt-20 justify-center items-center">
           <div>
             <h1 className="text-7xl pb-3">
               Suas informações clínicas, disponíveis quando importa.
