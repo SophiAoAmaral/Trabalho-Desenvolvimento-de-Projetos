@@ -13,7 +13,6 @@ console.log(process.env.PORT);
 
 import dns from 'node:dns';
 
-// força o Node a usar esses servidores DNS
 dns.setServers([
     '1.1.1.1',
     '8.8.8.8'
