@@ -90,14 +90,7 @@ async function excluirConta() {
                   <span className="text-gray-500/50">
                     Ficha clínica de emergencia
                   </span>
-                  <div className="mt-10 flex flex-col">
-                    <span className="tracking-widest uppercase text-xl text-gray-600">
-                      Senha
-                    </span>
-                    <span className="text-2xl tracking-[10px]">
-                      {ficha.senhaPublica}
-                    </span>
-                  </div>
+                  
                 </div>
               </div>
               <div className=" flex gap-10 mt-5 p-3">
